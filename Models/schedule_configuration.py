@@ -130,7 +130,6 @@ class ScheduleConfigurationModel(Observer):
                 self.configuration_tables[config_table][key] = None
 
     def _reset_mentors_workload(self):
-        for key in self.workload:
-            for record in self.workload[key]:
-                record[2][0] = 0
-                record[3][0] = 0
+        for record in self.workload:
+            record[3][0] = 0
+            record[4][0] = 0

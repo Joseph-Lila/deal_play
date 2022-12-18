@@ -25,7 +25,7 @@
             id: drop
             pos_hint: {'center_x': .5}
             font_size: 22
-            on_release: print("Press item")
+            on_release: root.root_widget.groups_table_menu.open()
 
     BoxLayout:
         orientation: 'vertical'

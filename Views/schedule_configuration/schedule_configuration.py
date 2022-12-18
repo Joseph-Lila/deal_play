@@ -1,8 +1,13 @@
+from functools import partial
+
 from kivy.factory import Factory
 from kivy.metrics import dp
 from kivy.properties import ObjectProperty
+from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
-from kivymd.uix.button import MDRaisedButton
+from kivymd.uix.button import MDRaisedButton, MDFlatButton
+from kivymd.uix.dialog import MDDialog
+from kivymd.uix.label import MDIcon, MDLabel
 from kivymd.uix.menu import MDDropdownMenu
 from kivymd.uix.screen import MDScreen
 
@@ -10,6 +15,7 @@ from Domain.Commands.get_configuration_table import GetConfigurationTableCommand
 from Domain.Commands.get_groups_table_data import GetGroupsTableDataCommand
 from Domain.Commands.get_initial_data import GetInitialDataCommand
 from Domain.Commands.get_mentors_table_data import GetMentorsTableDataCommand
+from Domain.Commands.reset_configuration_table import ResetConfigurationTableCommand
 from Domain.Events.event import Event
 from Domain.Events.get_configuration_table import GetConfigurationTableEvent
 from Domain.Events.get_groups_table_data import GetGroupsTableDataEvent
@@ -35,11 +41,46 @@ class ScheduleConfigurationView(MDScreen, Observable):
         ]
         self.controller.post_command_to_model(GetInitialDataCommand())
         self._init_menus()
+        self.controller.post_command_to_model(ResetConfigurationTableCommand())
+        self.dialog = MDDialog()
+        self.dialog.clear_widgets()
+        self.dialog.add_widget(Factory.MyDialog())
+
+    def show_configuration_item_dialog(self, instance):
+        if not self.dialog:
+            self.dialog = MDDialog(
+                title='ДОБАВИТЬ ЭЛЕМЕНТ КОНФИГУРАЦИИ',
+                type='custom',
+                content_cls=self._get_dialog_cls(),
+                buttons=[
+                    MDRaisedButton(
+                        md_bg_color=[247 / 255, 137 / 255, 37 / 255, 1],
+                        text="Отмена",
+                        theme_text_color="Custom",
+                        text_color='white',
+                        on_release=lambda _: self.dialog.dismiss()
+                    ),
+                    MDRaisedButton(
+                        md_bg_color=[247 / 255, 137 / 255, 37 / 255, 1],
+                        text="Сохранить",
+                        theme_text_color="Custom",
+                        text_color='white',
+                        on_release=lambda _: self.add_configuration_item()
+                    ),
+                ],
+            )
+        self.dialog.open()
+
+    def add_configuration_item(self):
+        mod = 'Над чертой' if self.configuration.under_line_checkbox.active else 'Под чертой'
+        group = self.configuration.group_drop.text
+        day_of_week = self.configuration.day_of_week_drop.text
 
     def _init_menus(self):
         self._init_days_of_week_menu()
         self._init_groups_menu()
         self._init_mentors_table_menu()
+        self._init_groups_table_menu()
 
     def _init_days_of_week_menu(self):
         self.days_of_week_menu = MDDropdownMenu(
@@ -55,7 +96,7 @@ class ScheduleConfigurationView(MDScreen, Observable):
         self.groups_menu = MDDropdownMenu(
             caller=self.configuration.group_drop,
             items=self._get_groups_menu_items(),
-            width_mult=3,
+            width_mult=2,
             max_height=dp(200),
             position="bottom",
             radius=[24, 0, 24, 0],
@@ -65,7 +106,7 @@ class ScheduleConfigurationView(MDScreen, Observable):
         self.mentors_table_menu = MDDropdownMenu(
             caller=self.mentors.drop,
             items=self._get_mentors_table_menu_items(),
-            width_mult=4,
+            width_mult=2,
             max_height=dp(200),
             position="bottom",
             radius=[24, 0, 24, 0],
@@ -75,7 +116,7 @@ class ScheduleConfigurationView(MDScreen, Observable):
         self.groups_table_menu = MDDropdownMenu(
             caller=self.groups.drop,
             items=self._get_groups_table_menu_items(),
-            width_mult=4,
+            width_mult=2,
             max_height=dp(200),
             position="bottom",
             radius=[24, 0, 24, 0],
@@ -88,7 +129,7 @@ class ScheduleConfigurationView(MDScreen, Observable):
                 "viewclass": "OneLineListItem",
                 "on_release": lambda x=group: self.controller.post_command_to_model(
                     GetGroupsTableDataCommand(
-                        mentor=x
+                        group=x
                     )
                 )
             } for group in self._groups
@@ -198,8 +239,9 @@ class ScheduleConfigurationView(MDScreen, Observable):
         return btn
 
     def _make_config_item_free(self):
-        # update mentors table
+        # update tables
         self.controller.post_command_to_model(GetMentorsTableDataCommand(mentor=self.mentors.drop.text))
+        self.controller.post_command_to_model(GetGroupsTableDataCommand(group=self.groups.drop.text))
 
         # free table
         for table_ceil in self.table_ceil_list:
@@ -207,9 +249,22 @@ class ScheduleConfigurationView(MDScreen, Observable):
 
         # add empty elements
         for table_ceil in self.table_ceil_list:
-            table_ceil.add_widget(Factory.ConfigurationTableItem(size_hint=(1, 1), text="+"))
+            table_ceil.add_widget(
+                Factory.ConfigurationTableItem(
+                    size_hint=(1, 1), text="+",
+                    on_release=self.show_configuration_item_dialog
+                )
+            )
 
-        # bind new empty elements
+    def _get_dialog_cls(self):
+        container = BoxLayout(orientation='vertical')
+        first_elem = BoxLayout()
+        first_elem.add_widget(MDIcon(icon='square-edit-outline'))
+        container.place = MDLabel(halign='center', font_size=30)
+        first_elem.add_widget(container.place)
+        first_elem.add_widget(Button())
+        container.add_widget(first_elem)
+        return container
 
     def _update_groups_table(self, event: Event):
         self.groups.drop.text = event.group
