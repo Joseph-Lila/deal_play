@@ -1,9 +1,8 @@
 #: import ResetConfigurationTableCommand Domain.Commands.reset_configuration_table.ResetConfigurationTableCommand
 
-<MyDialog@MDCard>:
-    size_hint: None, None
+<DialogContent@MDCard>:
+    id: main_cont
     orientation: 'vertical'
-    size: 556, 428
     md_bg_color: 58 / 255, 60 / 255, 73 / 255 , 1
     padding: 20
 
@@ -13,6 +12,37 @@
         text: "ДОБАВИТЬ ЭЛЕМЕНТ КОНФИГУРАЦИИ"
         theme_text_color: "Custom"
         text_color: 247 / 255, 137 / 255, 37 / 255, 1
+
+    MDLabel:
+        size_hint_y: .3
+        font_size: 10
+        text: "Укажите аудиторию"
+
+    BoxLayout:
+
+        MDCard:
+            size_hint: None, None
+            size: 58, 44
+
+            RelativeLayout:
+                MDIcon:
+                    icon: 'Assets/icons/free-icon-edit-3803197.png'
+                    halign: 'center'
+                    valign: 'center'
+                    size_hint: None, None
+                    size: 35, 35
+
+<MyDialog@Popup>:
+    title: 'ДОБАВИТЬ ЭЛЕМЕНТ КОНФИГУРАЦИИ'
+    separator_height: 0
+    size_hint: None, None
+    size: 556, 428
+    margin: 0
+    padding: 0
+
+    DialogContent:
+
+
 
 <ActionButtons@BoxLayout>:
     AnchorLayout:

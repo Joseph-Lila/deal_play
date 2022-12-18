@@ -42,9 +42,7 @@ class ScheduleConfigurationView(MDScreen, Observable):
         self.controller.post_command_to_model(GetInitialDataCommand())
         self._init_menus()
         self.controller.post_command_to_model(ResetConfigurationTableCommand())
-        self.dialog = MDDialog()
-        self.dialog.clear_widgets()
-        self.dialog.add_widget(Factory.MyDialog())
+        self.dialog = Factory.MyDialog()
 
     def show_configuration_item_dialog(self, instance):
         if not self.dialog:
