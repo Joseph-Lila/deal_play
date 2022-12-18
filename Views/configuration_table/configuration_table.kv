@@ -1,0 +1,402 @@
+#:import GetConfigurationTableCommand Domain.Commands.get_configuration_table.GetConfigurationTableCommand
+
+<ConfigurationTableItem@MDRaisedButton>:
+    md_bg_color: 217 / 255, 217 / 255, 217 / 255, 1
+    theme_text_color: "Custom"
+    text_color: "black"
+
+<ConfigurationTable@MDCard>:
+    md_bg_color: 58 / 255, 60 / 255, 73 / 255, 1
+    orientation: "vertical"
+    day_of_week_drop: day_of_week_drop
+    group_drop: group_drop
+    under_line_checkbox: under_line_checkbox
+    day_of_week: day_of_week
+    group: group
+    first: first
+    second: second
+    third: third
+    fourth: fourth
+    fifth: fifth
+    sixth: sixth
+
+    MDCard:
+        size_hint_y: 1.2
+        line_color: "white"
+        style: "outlined"
+        md_bg_color: 58 / 255, 60 / 255, 73 / 255, 1
+        radius: 0, 0, 6, 6
+        padding: 10
+
+        BoxLayout:
+            orientation: "vertical"
+            spacing: 5
+
+            MDLabel:
+                halign: "center"
+                text: "День недели"
+                font_size: 12
+                size_hint_y: .6
+
+            MDDropDownItem:
+                id: day_of_week_drop
+                pos_hint: {'center_x': .5}
+                font_size: 22
+                on_release: root.root_widget.days_of_week_menu.open()
+
+        BoxLayout:
+            orientation: "vertical"
+            spacing: 5
+
+            MDLabel:
+                halign: "center"
+                text: "Группа"
+                font_size: 12
+                size_hint_y: .6
+
+            MDDropDownItem:
+                id: group_drop
+                pos_hint: {'center_x': .5}
+                font_size: 22
+                on_release: root.root_widget.groups_menu.open()
+
+        BoxLayout:
+            orientation: "vertical"
+            spacing: 5
+
+            MDLabel:
+                halign: "center"
+                text: "Над чертой"
+                font_size: 12
+                size_hint_y: .6
+
+            MDCheckbox:
+                id: under_line_checkbox
+                active: True
+                checkbox_icon_normal: 'checkbox-blank-outline'
+                checkbox_icon_down: 'checkbox-marked-outline'
+                color_active: 'white'
+                pos_hint: {'center_x': .5, 'center_y': .5}
+                on_active: root.root_widget.controller.post_command_to_model(GetConfigurationTableCommand(mod='Над чертой' if self.active else 'Под чертой', group=group_drop.text, day_of_week=day_of_week_drop.text))
+
+        GridLayout:
+            cols: 2
+            rows: 2
+
+            MDCheckbox:
+                disabled: True
+                checkbox_icon_down: 'checkbox-blank'
+                disabled_color: 201 / 255, 179 / 255, 100 / 255, 1
+                active: True
+                size_hint_x: .5
+
+            MDLabel:
+                halign: "center"
+                text: "лекция"
+                font_size: 12
+
+            MDCheckbox:
+                disabled: True
+                checkbox_icon_down: 'checkbox-blank'
+                disabled_color: 158 / 255, 115 / 255, 191 / 255, 1
+                active: True
+                size_hint_x: .5
+
+            MDLabel:
+                halign: "center"
+                text: "лабораторная"
+                font_size: 12
+
+    MDCard:
+        size_hint_y: .5
+        line_color: "white"
+        style: "outlined"
+        md_bg_color: 58 / 255, 60 / 255, 73 / 255, 1
+        radius: 0
+
+        MDCard:
+            size_hint_x: .27
+            line_color: "white"
+            style: "outlined"
+            md_bg_color: 58 / 255, 60 / 255, 73 / 255, 1
+            radius: 0
+
+            MDLabel:
+                id: day_of_week
+                halign: 'center'
+                text: "ПН"
+
+        MDCard:
+            line_color: "white"
+            style: "outlined"
+            md_bg_color: 58 / 255, 60 / 255, 73 / 255, 1
+            radius: 0
+
+            MDLabel:
+                id: group
+                halign: 'center'
+                text: "ИП-42"
+
+    MDCard:
+        line_color: "white"
+        style: "outlined"
+        md_bg_color: 58 / 255, 60 / 255, 73 / 255, 1
+        radius: 0
+
+        BoxLayout:
+            size_hint_x: .27
+
+            BoxLayout:
+                size_hint_x: .8
+                orientation: "vertical"
+                padding: 5
+
+                MDLabel:
+                    halign: "center"
+                    font_size: 14
+                    text: "8.20 - 9.00"
+
+                MDLabel:
+                    halign: "center"
+                    font_size: 14
+                    text: "9.05 - 9.45"
+
+            MDCard:
+                size_hint_x: .2
+                line_color: "white"
+                style: "outlined"
+                md_bg_color: 58 / 255, 60 / 255, 73 / 255, 1
+                radius: 0
+
+                MDLabel:
+                    halign: "center"
+                    valign: "center"
+                    text: "1"
+
+        BoxLayout:
+            id: first
+            padding: 20
+
+            ConfigurationTableItem:
+                size_hint: 1, 1
+                text: "+"
+
+    MDCard:
+        line_color: "white"
+        style: "outlined"
+        md_bg_color: 58 / 255, 60 / 255, 73 / 255, 1
+        radius: 0
+
+        BoxLayout:
+            size_hint_x: .27
+
+            BoxLayout:
+                size_hint_x: .8
+                orientation: "vertical"
+                padding: 5
+
+                MDLabel:
+                    halign: "center"
+                    font_size: 14
+                    text: "10.00 - 10.40"
+
+                MDLabel:
+                    halign: "center"
+                    font_size: 14
+                    text: "10.45 - 11.25"
+
+            MDCard:
+                size_hint_x: .2
+                line_color: "white"
+                style: "outlined"
+                md_bg_color: 58 / 255, 60 / 255, 73 / 255, 1
+                radius: 0
+
+                MDLabel:
+                    halign: "center"
+                    valign: "center"
+                    text: "2"
+
+        BoxLayout:
+            id: second
+            padding: 20
+
+            ConfigurationTableItem:
+                size_hint: 1, 1
+                text: "+"
+
+    MDCard:
+        line_color: "white"
+        style: "outlined"
+        md_bg_color: 58 / 255, 60 / 255, 73 / 255, 1
+        radius: 0
+
+        BoxLayout:
+            size_hint_x: .27
+
+            BoxLayout:
+                size_hint_x: .8
+                orientation: "vertical"
+                padding: 5
+
+                MDLabel:
+                    halign: "center"
+                    font_size: 14
+                    text: "11.35 - 12.15"
+
+                MDLabel:
+                    halign: "center"
+                    font_size: 14
+                    text: "12.20 - 13.00"
+
+            MDCard:
+                size_hint_x: .2
+                line_color: "white"
+                style: "outlined"
+                md_bg_color: 58 / 255, 60 / 255, 73 / 255, 1
+                radius: 0
+
+                MDLabel:
+                    halign: "center"
+                    valign: "center"
+                    text: "3"
+
+        BoxLayout:
+            id: third
+            padding: 20
+
+            ConfigurationTableItem:
+                size_hint: 1, 1
+                text: "+"
+
+    MDCard:
+        line_color: "white"
+        style: "outlined"
+        md_bg_color: 58 / 255, 60 / 255, 73 / 255, 1
+        radius: 0
+
+        BoxLayout:
+            size_hint_x: .27
+
+            BoxLayout:
+                size_hint_x: .8
+                orientation: "vertical"
+                padding: 5
+
+                MDLabel:
+                    halign: "center"
+                    font_size: 14
+                    text: "13.30 - 14.10"
+
+                MDLabel:
+                    halign: "center"
+                    font_size: 14
+                    text: "14.15 - 14.55"
+
+            MDCard:
+                size_hint_x: .2
+                line_color: "white"
+                style: "outlined"
+                md_bg_color: 58 / 255, 60 / 255, 73 / 255, 1
+                radius: 0
+
+                MDLabel:
+                    halign: "center"
+                    valign: "center"
+                    text: "4"
+
+        BoxLayout:
+            id: fourth
+            padding: 20
+
+            ConfigurationTableItem:
+                size_hint: 1, 1
+                text: "+"
+
+    MDCard:
+        line_color: "white"
+        style: "outlined"
+        md_bg_color: 58 / 255, 60 / 255, 73 / 255, 1
+        radius: 0
+
+        BoxLayout:
+            size_hint_x: .27
+
+            BoxLayout:
+                size_hint_x: .8
+                orientation: "vertical"
+                padding: 5
+
+                MDLabel:
+                    halign: "center"
+                    font_size: 14
+                    text: "15.05 - 15.45"
+
+                MDLabel:
+                    halign: "center"
+                    font_size: 14
+                    text: "15.50 - 16.30"
+
+            MDCard:
+                size_hint_x: .2
+                line_color: "white"
+                style: "outlined"
+                md_bg_color: 58 / 255, 60 / 255, 73 / 255, 1
+                radius: 0
+
+                MDLabel:
+                    halign: "center"
+                    valign: "center"
+                    text: "5"
+
+        BoxLayout:
+            id: fifth
+            padding: 20
+
+            ConfigurationTableItem:
+                size_hint: 1, 1
+                text: "+"
+
+    MDCard:
+        line_color: "white"
+        style: "outlined"
+        md_bg_color: 58 / 255, 60 / 255, 73 / 255, 1
+        radius: 6, 6, 0, 0
+
+        BoxLayout:
+            size_hint_x: .27
+
+            BoxLayout:
+                size_hint_x: .8
+                orientation: "vertical"
+                padding: 5
+
+                MDLabel:
+                    halign: "center"
+                    font_size: 14
+                    text: "16.45 - 17.25"
+
+                MDLabel:
+                    halign: "center"
+                    font_size: 14
+                    text: "17.30 - 18.10"
+
+            MDCard:
+                size_hint_x: .2
+                line_color: "white"
+                style: "outlined"
+                md_bg_color: 58 / 255, 60 / 255, 73 / 255, 1
+                radius: 0
+
+                MDLabel:
+                    halign: "center"
+                    valign: "center"
+                    text: "6"
+
+        BoxLayout:
+            id: sixth
+            padding: 20
+
+            ConfigurationTableItem:
+                size_hint: 1, 1
+                text: "+"

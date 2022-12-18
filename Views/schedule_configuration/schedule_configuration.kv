@@ -1,0 +1,140 @@
+#: import ResetConfigurationTableCommand Domain.Commands.reset_configuration_table.ResetConfigurationTableCommand
+
+<ActionButtons@BoxLayout>:
+    AnchorLayout:
+        MDRaisedButton:
+            text: "АВТОЗАПОЛНЕНИЕ"
+            md_bg_color: 237 / 255, 133 / 255, 32 / 255, 1
+
+    AnchorLayout:
+        MDRaisedButton:
+            text: "СБРОСИТЬ"
+            md_bg_color: 237 / 255, 133 / 255, 32 / 255, 1
+            on_release: root.root_widget.controller.post_command_to_model(ResetConfigurationTableCommand())
+
+<Title@BoxLayout>:
+    orientation: "vertical"
+
+    MDLabel:
+        text: "КОНФИГУРАЦИЯ РАСПИСАНИЯ"
+        font_style: "H4"
+        theme_text_color: "Custom"
+        text_color: 237 / 255, 133 / 255, 32 / 255, 1
+
+    MDLabel:
+        text: "ДНЕВНАЯ ф.о. - 2022 - 1е полугодие"
+        font_style: "H4"
+        theme_text_color: "Custom"
+        text_color: 237 / 255, 133 / 255, 32 / 255, 1
+
+<Footer@BoxLayout>:
+
+    AnchorLayout:
+        size_hint_x: 1
+        MDLabel:
+            text: "Подключение и техническая поддержка:"
+            font_style: "Body1"
+            theme_text_color: "Custom"
+            text_color: "white"
+
+    AnchorLayout:
+        size_hint_x: .5
+        MDLabel:
+            text: "edu.gstu@gmail.by"
+            font_style: "Body1"
+            bold: True
+            theme_text_color: "Custom"
+            text_color: 153 / 255, 153 / 255, 153 / 255, 1
+
+    AnchorLayout:
+        size_hint_x: .5
+        MDLabel:
+            text: "80(29)123-45-67"
+            font_style: "Button"
+            font_size: "18"
+            bold: True
+            theme_text_color: "Custom"
+            text_color: "white"
+
+    AnchorLayout:
+        size_hint_x: 1
+        MDRaisedButton:
+            text: "ВЫХОД"
+            md_bg_color: 247 / 255, 137 / 255, 37 / 255, 1
+
+
+<ScheduleConfigurationView>:
+    id: root_widget
+    mentors: mentors
+    groups: groups
+    configuration: configuration
+
+    MDCard:
+        elevation: 10
+        md_bg_color: 25 / 255, 28 / 255, 34 / 255, 1
+        padding: "8dp"
+
+        MDCard:
+            md_bg_color: 35 / 255, 37 / 255, 49 / 255, 1
+
+            BoxLayout:
+                orientation: 'vertical'
+                padding: 20
+
+                BoxLayout:
+                    size_hint_y: 1
+
+                    BoxLayout:
+
+                        BoxLayout:
+                            orientation: "vertical"
+                            padding: 10
+                            spacing: 10
+
+                            Title:
+                                size_hint_y: .15
+
+                            ActionButtons:
+                                size_hint_y: .1
+                                root_widget: root
+
+                            ConfigurationTable:
+                                id: configuration
+                                root_widget: root_widget
+
+                        BoxLayout:
+                            size_hint_x: .65
+                            orientation: "vertical"
+                            spacing: 30
+                            padding: 10
+
+                            MentorsTable:
+                                id: mentors
+                                root_widget: root_widget
+
+                            GroupsTable:
+                                id: groups
+                                root_widget: root_widget
+
+                            BoxLayout:
+                                orientation: "vertical"
+                                size_hint_y: .8
+
+                                AnchorLayout:
+                                    MDRaisedButton:
+                                        md_bg_color: 'green'
+                                        text: "СОХРАНИТЬ"
+
+                                AnchorLayout:
+                                    MDRaisedButton:
+                                        md_bg_color: 58 / 255, 60 / 255, 73 / 255, 1
+                                        text: "ОТПРАВИТЬ"
+
+                                AnchorLayout:
+                                    MDRaisedButton:
+                                        md_bg_color: 'red'
+                                        text: "УДАЛИТЬ"
+
+                Footer:
+                    size_hint_y: .1
+                    root_widget: root_widget
