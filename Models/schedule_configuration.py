@@ -1,7 +1,3 @@
-import datetime
-from datetime import date
-from functools import partial
-
 from loguru import logger
 from Domain.Commands.command import Command
 from Domain.Commands.get_configuration_table import GetConfigurationTableCommand
@@ -9,12 +5,13 @@ from Domain.Commands.get_groups_table_data import GetGroupsTableDataCommand
 from Domain.Commands.get_initial_data import GetInitialDataCommand
 from Domain.Commands.get_mentors_table_data import GetMentorsTableDataCommand
 from Domain.Commands.reset_configuration_table import ResetConfigurationTableCommand
-from Domain.Events.event import Event
+from Domain.Commands.save_configuration_item import SaveConfigurationItemCommand
 from Domain.Events.get_configuration_table import GetConfigurationTableEvent
 from Domain.Events.get_groups_table_data import GetGroupsTableDataEvent
 from Domain.Events.get_initial_data import GetInitialDataEvent
 from Domain.Events.get_mentors_table_data import GetMentorsTableDataEvent
 from Domain.Events.reset_configuration_table import ResetConfigurationTableEvent
+from Domain.Events.save_configuration_item import SaveConfigurationItemEvent
 from Services.observer import Observer
 
 
@@ -84,6 +81,18 @@ class ScheduleConfigurationModel(Observer):
                 groups_quantity=len(self.groups),
                 groups_workload=self._get_groups_workload(cmd.group)
             )
+        elif type(cmd) == SaveConfigurationItemCommand:
+            self._save_configuration_item(cmd)
+            return SaveConfigurationItemEvent(
+                configuration_table=self.configuration_tables[(cmd.day_of_week, cmd.mod, cmd.group)])
+
+    def _save_configuration_item(self, cmd):
+        self.configuration_tables[(cmd.day_of_week, cmd.mod, cmd.group)][cmd.number_of_class] = (
+            cmd.place,
+            cmd.mentor,
+            cmd.kind,
+            'Матем.'
+        )
 
     def _get_mentors_workload(self, mentor):
         workload = []

@@ -1,4 +1,5 @@
 #: import ResetConfigurationTableCommand Domain.Commands.reset_configuration_table.ResetConfigurationTableCommand
+#: import SaveConfigurationItemCommand Domain.Commands.save_configuration_item.SaveConfigurationItemCommand
     
 
 <MyDialog@ModalView>:
@@ -119,6 +120,7 @@
 					text: 'Сохранить'
 					font_size: 25
 					md_bg_color: 247/255, 137/255, 37/255, 1
+					on_release: root.owner.controller.post_command_to_model(SaveConfigurationItemCommand(group=root.owner.configuration.group_drop.text, day_of_week=root.owner.configuration.day_of_week_drop.text, mod='Над чертой' if root.owner.configuration.under_line_checkbox.active else 'Под чертой', place=place.text, mentor=mentor.text, kind=kind.text, number_of_class=root.owner.number_of_class))
 
 
 

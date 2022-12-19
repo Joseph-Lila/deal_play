@@ -20,6 +20,7 @@ from Domain.Events.get_groups_table_data import GetGroupsTableDataEvent
 from Domain.Events.get_initial_data import GetInitialDataEvent
 from Domain.Events.get_mentors_table_data import GetMentorsTableDataEvent
 from Domain.Events.reset_configuration_table import ResetConfigurationTableEvent
+from Domain.Events.save_configuration_item import SaveConfigurationItemEvent
 from Services.observable import Observable
 
 
@@ -183,6 +184,12 @@ class ScheduleConfigurationView(MDScreen, Observable):
     def _set_dialog_mentor(self, value):
         self.dialog.mentor.text = value
 
+    def _set_number_of_class(self, instance):
+        for i, table_ceil in enumerate(self.table_ceil_list, start=1):
+            elem = table_ceil.children[0]
+            if elem is instance:
+                self.number_of_class = i
+
     def _get_mentors_table_menu_items(self):
         mentors_table_menu_items = [
             {
@@ -234,12 +241,48 @@ class ScheduleConfigurationView(MDScreen, Observable):
             self.initialize_data(event)
         elif type(event) == GetConfigurationTableEvent:
             self.change_configuration_table(event)
+            self._exchange_configuration_table_elements(event)
         elif type(event) == ResetConfigurationTableEvent:
             self._make_config_item_free()
         elif type(event) == GetMentorsTableDataEvent:
             self._update_mentors_table(event)
         elif type(event) == GetGroupsTableDataEvent:
             self._update_groups_table(event)
+        elif type(event) == SaveConfigurationItemEvent:
+            self._exchange_configuration_table_elements(event)
+
+    def _exchange_configuration_table_elements(self, event):
+        # free table
+        for table_ceil in self.table_ceil_list:
+            table_ceil.clear_widgets()
+
+        for class_number, value in event.configuration_table.items():
+            if value:
+                place, mentor, kind, subject = value
+                if kind == 'лекция':
+                    self.table_ceil_list[class_number - 1].add_widget(
+                        Factory.ConfigurationTableLecture(
+                            size_hint=(1, 1), text=f"{subject} а. {place} пр. {mentor}",
+                            on_release=self.show_configuration_item_dialog,
+                            on_press=self._set_number_of_class
+                        )
+                    )
+                else:
+                    self.table_ceil_list[class_number - 1].add_widget(
+                        Factory.ConfigurationTableLab(
+                            size_hint=(1, 1), text=f"{subject} а. {place} пр. {mentor}",
+                            on_release=self.show_configuration_item_dialog,
+                            on_press=self._set_number_of_class
+                        )
+                    )
+            else:
+                self.table_ceil_list[class_number - 1].add_widget(
+                    Factory.ConfigurationTableItem(
+                        size_hint=(1, 1), text="+",
+                        on_release=self.show_configuration_item_dialog,
+                        on_press=self._set_number_of_class
+                    )
+                )
 
     def initialize_data(self, event: Event):
         self._days_of_week = event.days
@@ -307,19 +350,10 @@ class ScheduleConfigurationView(MDScreen, Observable):
             table_ceil.add_widget(
                 Factory.ConfigurationTableItem(
                     size_hint=(1, 1), text="+",
-                    on_release=self.show_configuration_item_dialog
+                    on_release=self.show_configuration_item_dialog,
+                    on_press=self._set_number_of_class
                 )
             )
-
-    def _get_dialog_cls(self):
-        container = BoxLayout(orientation='vertical')
-        first_elem = BoxLayout()
-        first_elem.add_widget(MDIcon(icon='square-edit-outline'))
-        container.place = MDLabel(halign='center', font_size=30)
-        first_elem.add_widget(container.place)
-        first_elem.add_widget(Button())
-        container.add_widget(first_elem)
-        return container
 
     def _update_groups_table(self, event: Event):
         self.groups.drop.text = event.group
