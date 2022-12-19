@@ -1,42 +1,124 @@
 #: import ResetConfigurationTableCommand Domain.Commands.reset_configuration_table.ResetConfigurationTableCommand
-
-<DialogContent@MDCard>:
-    id: main_cont
-    orientation: 'vertical'
-    md_bg_color: 58 / 255, 60 / 255, 73 / 255 , 1
-    padding: 20
-
-    MDLabel:
-        font_size: 35
-        bold: True
-        text: "ДОБАВИТЬ ЭЛЕМЕНТ КОНФИГУРАЦИИ"
-        theme_text_color: "Custom"
-        text_color: 247 / 255, 137 / 255, 37 / 255, 1
-
-    MDLabel:
-        size_hint_y: .3
-        font_size: 10
-        text: "Укажите аудиторию"
-
-    BoxLayout:
-
-        MDCard:
-            size_hint: None, None
-            size: 58, 44
-
-            RelativeLayout:
-                MDIcon:
-                    icon: 'Assets/icons/free-icon-edit-3803197.png'
-                    halign: 'center'
-                    valign: 'center'
-                    size_hint: None, None
-                    size: 35, 35
+    
 
 <MyDialog@ModalView>:
     size_hint: None, None
     size: 556, 428
+    kind: kind
+    mentor: mentor
+    place: place
+    place_btn: place_btn
+    kind_btn: kind_btn
+    mentor_btn: mentor_btn
 
-    DialogContent:
+    MDCard:
+    	id: main_cont
+		orientation: 'vertical'
+		md_bg_color: 58 / 255, 60 / 255, 73 / 255 , 1
+		padding: 25
+		spacing: 10
+
+		MDLabel:
+			font_size: 35
+			bold: True
+			text: "ДОБАВИТЬ ЭЛЕМЕНТ КОНФИГУРАЦИИ"
+			theme_text_color: "Custom"
+			text_color: 247 / 255, 137 / 255, 37 / 255, 1
+
+		MDLabel:
+			size_hint_y: .3
+			font_size: 10
+			text: "Укажите аудиторию"
+
+		BoxLayout:
+
+			AnchorLayout:
+				size_hint_x: .3
+				MDIcon:
+					icon: 'Assets/icons/free-icon-edit-3803197.png'
+			
+			AnchorLayout:    
+				MDLabel:
+					id: place
+					text: '2-227'
+					halign: 'center'
+					valign: 'center'
+					font_size: 32
+			
+			AnchorLayout: 
+				size_hint_x: .3
+				MDIconButton:
+					id: place_btn
+					icon: 'Assets/icons/free-icon-next-4766041.png'
+					on_release: root.owner.dialog_places_menu.open() 
+				
+		MDLabel:
+			size_hint_y: .3
+			font_size: 10
+			text: "Укажите преподавателя"
+
+		BoxLayout:
+		
+			AnchorLayout:
+				size_hint_x: .3
+				MDIcon:
+					icon: 'Assets/icons/free-icon-user-3801784.png'
+			
+			AnchorLayout:    
+				MDLabel:
+					id: mentor
+					text: '2-227'
+					halign: 'center'
+					valign: 'center'
+					font_size: 32
+		
+			AnchorLayout:
+				size_hint_x: .3 
+				MDIconButton:
+					id: mentor_btn
+					icon: 'Assets/icons/free-icon-next-4766041.png'
+					on_release: root.owner.dialog_mentors_menu.open()
+				
+		MDLabel:
+			size_hint_y: .3
+			font_size: 10
+			text: "Укажите тип занятия"
+
+		BoxLayout:
+		
+			AnchorLayout:
+				size_hint_x: .3
+				MDIcon:
+					icon: 'Assets/icons/free-icon-minimize-3803131.png'
+			
+			AnchorLayout:    
+				MDLabel:
+					id: kind
+					text: '2-227'
+					halign: 'center'
+					valign: 'center'
+					font_size: 32
+		
+			AnchorLayout:
+				size_hint_x: .3 
+				MDIconButton:
+					id: kind_btn
+					icon: 'Assets/icons/free-icon-next-4766041.png'
+					on_release: root.owner.dialog_kinds_menu.open()
+				
+		BoxLayout:
+			AnchorLayout:
+				MDRaisedButton:
+					text: 'Отмена'
+					font_size: 25
+					md_bg_color: 247/255, 137/255, 37/255, 1
+					on_release: root.dismiss()
+				
+			AnchorLayout:
+				MDRaisedButton:
+					text: 'Сохранить'
+					font_size: 25
+					md_bg_color: 247/255, 137/255, 37/255, 1
 
 
 

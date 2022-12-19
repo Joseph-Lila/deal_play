@@ -1,5 +1,3 @@
-from functools import partial
-
 from kivy.factory import Factory
 from kivy.metrics import dp
 from kivy.properties import ObjectProperty
@@ -39,34 +37,13 @@ class ScheduleConfigurationView(MDScreen, Observable):
             self.configuration.first, self.configuration.second, self.configuration.third,
             self.configuration.fourth, self.configuration.fifth, self.configuration.sixth
         ]
+        self.dialog = Factory.MyDialog()
+        self.dialog.owner = self
         self.controller.post_command_to_model(GetInitialDataCommand())
         self._init_menus()
         self.controller.post_command_to_model(ResetConfigurationTableCommand())
-        self.dialog = Factory.MyDialog()
 
     def show_configuration_item_dialog(self, instance):
-        if not self.dialog:
-            self.dialog = MDDialog(
-                title='ДОБАВИТЬ ЭЛЕМЕНТ КОНФИГУРАЦИИ',
-                type='custom',
-                content_cls=self._get_dialog_cls(),
-                buttons=[
-                    MDRaisedButton(
-                        md_bg_color=[247 / 255, 137 / 255, 37 / 255, 1],
-                        text="Отмена",
-                        theme_text_color="Custom",
-                        text_color='white',
-                        on_release=lambda _: self.dialog.dismiss()
-                    ),
-                    MDRaisedButton(
-                        md_bg_color=[247 / 255, 137 / 255, 37 / 255, 1],
-                        text="Сохранить",
-                        theme_text_color="Custom",
-                        text_color='white',
-                        on_release=lambda _: self.add_configuration_item()
-                    ),
-                ],
-            )
         self.dialog.open()
 
     def add_configuration_item(self):
@@ -79,11 +56,44 @@ class ScheduleConfigurationView(MDScreen, Observable):
         self._init_groups_menu()
         self._init_mentors_table_menu()
         self._init_groups_table_menu()
+        self._init_dialog_places_menu()
+        self._init_dialog_kinds_menu()
+        self._init_dialog_mentors_menu()
 
     def _init_days_of_week_menu(self):
         self.days_of_week_menu = MDDropdownMenu(
             caller=self.configuration.day_of_week_drop,
             items=self._get_days_of_week_menu_items(),
+            width_mult=2,
+            max_height=dp(200),
+            position="bottom",
+            radius=[24, 0, 24, 0],
+        )
+
+    def _init_dialog_places_menu(self):
+        self.dialog_places_menu = MDDropdownMenu(
+            caller=self.dialog.place_btn,
+            items=self._get_places_dialog_menu_items(),
+            width_mult=2,
+            max_height=dp(200),
+            position="bottom",
+            radius=[24, 0, 24, 0],
+        )
+
+    def _init_dialog_kinds_menu(self):
+        self.dialog_kinds_menu = MDDropdownMenu(
+            caller=self.dialog.kind_btn,
+            items=self._get_kinds_dialog_menu_items(),
+            width_mult=2,
+            max_height=dp(200),
+            position="bottom",
+            radius=[24, 0, 24, 0],
+        )
+
+    def _init_dialog_mentors_menu(self):
+        self.dialog_mentors_menu = MDDropdownMenu(
+            caller=self.dialog.mentor_btn,
+            items=self._get_mentors_dialog_menu_items(),
             width_mult=2,
             max_height=dp(200),
             position="bottom",
@@ -120,6 +130,16 @@ class ScheduleConfigurationView(MDScreen, Observable):
             radius=[24, 0, 24, 0],
         )
 
+    def _get_kinds_dialog_menu_items(self):
+        kinds_table_menu_items = [
+            {
+                "text": kind,
+                "viewclass": "OneLineListItem",
+                "on_release": lambda x=kind: self._set_dialog_kind(x)
+            } for kind in self._kinds
+        ]
+        return kinds_table_menu_items
+
     def _get_groups_table_menu_items(self):
         groups_table_menu_items = [
             {
@@ -133,6 +153,35 @@ class ScheduleConfigurationView(MDScreen, Observable):
             } for group in self._groups
         ]
         return groups_table_menu_items
+
+    def _get_places_dialog_menu_items(self):
+        places_table_menu_items = [
+            {
+                "text": place,
+                "viewclass": "OneLineListItem",
+                "on_release": lambda x=place: self._set_dialog_place(x)
+            } for place in self._places
+        ]
+        return places_table_menu_items
+
+    def _get_mentors_dialog_menu_items(self):
+        mentors_table_menu_items = [
+            {
+                "text": mentor,
+                "viewclass": "OneLineListItem",
+                "on_release": lambda x=mentor: self._set_dialog_mentor(x)
+            } for mentor in self._mentors
+        ]
+        return mentors_table_menu_items
+
+    def _set_dialog_place(self, value):
+        self.dialog.place.text = value
+
+    def _set_dialog_kind(self, value):
+        self.dialog.kind.text = value
+
+    def _set_dialog_mentor(self, value):
+        self.dialog.mentor.text = value
 
     def _get_mentors_table_menu_items(self):
         mentors_table_menu_items = [
@@ -197,7 +246,15 @@ class ScheduleConfigurationView(MDScreen, Observable):
         self._mentors = event.mentors
         self._groups = event.groups
         self._subjects = event.subjects
+        self._kinds = event.kinds
+        self._places = event.places
         self._init_configuration_screen()
+        self._init_dialog()
+
+    def _init_dialog(self):
+        self.dialog.place.text = self._places[0]
+        self.dialog.mentor.text = self._mentors[0]
+        self.dialog.kind.text = self._kinds[0]
 
     def _init_configuration_screen(self):
         self.configuration.day_of_week_drop.text = self.configuration.day_of_week.text = self._days_of_week[0]

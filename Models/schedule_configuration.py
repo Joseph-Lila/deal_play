@@ -28,7 +28,8 @@ class ScheduleConfigurationModel(Observer):
             ['Мур Я.С.', 'Матем.', 'ИП-41', [0, 60], [0, 60]],
             ['Мур Я.С.', 'Матем.', 'ИП-42', [0, 60], [0, 60]],
         ]
-
+        self.kinds = ('лекция', 'практика')
+        self.places = ('2-227', '2-220', '2-229', '2-223')
         self.days_of_week = ('ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ')
         self.mods = ('Над чертой', 'Под чертой')
         self.groups = ('ИП-41', 'ИП-42')
@@ -55,6 +56,8 @@ class ScheduleConfigurationModel(Observer):
                 groups=self.groups,
                 mentors=self.mentors,
                 subjects=self.subjects,
+                kinds=self.kinds,
+                places=self.places,
             )
         elif type(cmd) == GetConfigurationTableCommand:
             return GetConfigurationTableEvent(

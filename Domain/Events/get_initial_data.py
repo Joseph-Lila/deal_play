@@ -12,3 +12,5 @@ class GetInitialDataEvent(Event):
     groups: tuple
     mentors: tuple
     subjects: tuple
+    kinds: tuple
+    places: tuple
