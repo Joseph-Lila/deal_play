@@ -12,6 +12,5 @@ class Observer:
         self._observers.remove(observer)
 
     def notify_observers(self, event: Event, *args, **kwargs):
-        print(event)
         for observer in self._observers:
             observer.model_is_changed(event)

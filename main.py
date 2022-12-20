@@ -8,6 +8,7 @@ Window.size = (1137, 786)
 
 class MainApp(MDApp):
     title = 'Деловая Игра'
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.load_all_kv_files(self.directory)
